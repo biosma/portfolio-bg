@@ -97,6 +97,10 @@ const navbarItems = [
     href: '/contact',
     children: 'CONTACT',
   },
+  {
+    href: '/sandbox',
+    children: 'SANDBOX',
+  },
 ];
 
 interface DropdownMenuProps {
@@ -108,26 +112,35 @@ interface DropdownMenuProps {
 
 const WorkDropdown = ({ isVisible, onMouseEnter, onMouseLeave, locale }: DropdownMenuProps) => {
   return (
-    <div
-      className={cn(
-        'absolute top-full left-1/2 transform -translate-x-1/2 mt-2 w-64 bg-white dark:bg-gray-900 rounded-lg shadow-lg border border-gray-200 dark:border-gray-700 transition-all duration-200 z-50',
-        isVisible ? 'opacity-100 visible translate-y-0' : 'opacity-0 invisible -translate-y-2',
-      )}
-      onMouseEnter={onMouseEnter}
-      onMouseLeave={onMouseLeave}
-    >
-      <div className="py-2">
-        {projects.map((project) => (
-          <Link
-            key={project.id}
-            href={`/${locale}/${project.url}`}
-            className="block px-4 py-3 text-sm font-medium text-gray-700 dark:text-gray-300 hover:bg-gray-100 dark:hover:bg-gray-800 transition-colors"
-          >
-            {project.title}
-          </Link>
-        ))}
-      </div>
-    </div>
+  <div
+  className={cn(
+    'absolute top-full left-1/2 -translate-x-1/6 mt-4 w-64 rounded-xl transition-all duration-200 z-50',
+    isVisible ? 'opacity-100 visible translate-y-0' : 'opacity-0 invisible -translate-y-2',
+    "bg-white/30 dark:bg-accent/30 backdrop-blur-lg z-[1100]"
+  )}
+  onMouseEnter={onMouseEnter}
+  onMouseLeave={onMouseLeave}
+>
+  <div className="py-2">
+    {projects.map((project) => (
+      <Link
+        key={project.id}
+        href={`/${locale}/${project.url}`}
+        className={cn(
+          'block px-4 py-3 text-sm font-medium',
+          // Colores de texto con buen contraste,
+          'text-neutral-800 dark:text-neutral-100',
+          // Hover con fondo translúcido (no opaco) + leve incremento de brillo
+          'hover:bg-black/5 dark:hover:bg-white/5 hover:backdrop-brightness-110 dark:hover:backdrop-brightness-125',
+          'transition-[background,filter] rounded-lg mx-2'
+        )}
+      >
+        {project.title}
+      </Link>
+    ))}
+  </div>
+</div>
+
   );
 };
 
@@ -161,11 +174,11 @@ export const Navbar = () => {
   }, []);
 
   return (
-    <nav className="h-20 flex justify-center items-center font-medium relative">
+    <nav className="h-20 flex justify-center items-center font-medium relative  z-[1000]">
       <NavbarSidebar open={isOpen} onOpenChange={setIsOpen} items={navbarItems} />
 
-      <div className="hidden lg:flex flex-1 justify-center gap-6 ps-16">
-        {navbarItems.map((item) => {
+      <div className={cn("hidden lg:flex flex-1 justify-center gap-6", !pathname.includes('/sandbox') && "ps-[12.5%]")}>
+        <div className='hidden lg:flex justify-center gap-6 px-6 py-2 bg-white/30 dark:bg-accent/30 backdrop-blur-lg w-fit rounded-lg'>{navbarItems.map((item) => {
           const isWorkItem = item.href === '/work';
           const isActive =
             item.href === `/` ? pathname === `/${locale}` : pathname.includes(item.href);
@@ -176,8 +189,8 @@ export const Navbar = () => {
                 href={item.href}
                 isActive={isActive}
                 hasDropdown={item.hasDropdown}
-                onMouseEnter={isWorkItem ? handleMouseEnterWork : undefined}
-                onMouseLeave={isWorkItem ? handleMouseLeaveWork : undefined}
+                onMouseEnter={isWorkItem && isActive? handleMouseEnterWork : undefined}
+                onMouseLeave={isWorkItem && isActive? handleMouseLeaveWork : undefined}
               >
                 {t(item.children)}
               </NavbarItem>
@@ -194,11 +207,12 @@ export const Navbar = () => {
           );
         })}
       </div>
+      </div>
 
-      <div className="flex items-center gap-2 pe-6">
+      {!pathname.includes('/sandbox') && <div className="flex items-center gap-2 pe-6">
         <LocaleToggle />
         <ModeToggle />
-      </div>
+      </div>}
 
       <div className="items-center justify-center gap-4 flex lg:hidden">
         <Button

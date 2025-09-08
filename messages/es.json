@@ -7,7 +7,8 @@
     "HOME": "Inicio",
     "ABOUT": "Sobre mi",
     "WORK": "Trabajo",
-    "CONTACT": "Contacto"
+    "CONTACT": "Contacto",
+    "SANDBOX": "Sandbox"
   },
   "AboutPage": {
     "title": "Codificando a toda velocidad y entregando excelencia",
@@ -237,5 +238,8 @@
   "ContactPage": {
     "title": "Charlemos!",
     "email": "gonzalourielbonelli@gmail.com"
+  },
+  "SandboxPage": {
+    "title": "Aquí encontrarás componentes aleatorios"
   }
 }

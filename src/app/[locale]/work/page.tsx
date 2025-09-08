@@ -316,7 +316,7 @@ function BrowserWindow({
           </div>
 
           <div className="flex items-center flex-1 gap-3">
-            <div className="flex gap-1">
+            <div className="flex gap-1 dark:text-black">
               <div className="p-1">←</div>
               <div className="p-1">→</div>
               <div className="p-1">↻</div>

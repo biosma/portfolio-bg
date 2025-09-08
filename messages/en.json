@@ -7,7 +7,8 @@
     "HOME": "Home",
     "ABOUT": "About",
     "WORK": "Work",
-    "CONTACT": "Contact"
+    "CONTACT": "Contact",
+    "SANDBOX": "Sandbox"
   },
   "AboutPage": {
     "title": "Zooming through code and delivering excellence",
@@ -237,5 +238,8 @@
   "ContactPage": {
     "title": "Let’s chat!",
     "email": "gonzalourielbonelli@gmail.com"
+  },
+  "SandboxPage": {
+    "title": "Here you will find random components"
   }
 }
