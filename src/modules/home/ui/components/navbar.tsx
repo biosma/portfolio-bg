@@ -58,10 +58,10 @@ const NavbarItem = ({
 };
 
 const projects = [
-  { id: 1, title: 'TradeNetHub', url: 'work/tradenethub' },
-  { id: 2, title: 'Mena Homes', url: 'work/mena-homes' },
-  { id: 3, title: 'Mentis', url: 'work/mentis' },
-  { id: 4, title: 'Recovery Delivered', url: 'work/recovery-delivered' },
+  { id: 1, title: 'TradeNetHub', url: 'tradenethub' },
+  { id: 2, title: 'Mena Homes', url: 'mena-homes' },
+  { id: 3, title: 'Mentis', url: 'mentis' },
+  { id: 4, title: 'Recovery Delivered', url: 'recovery-delivered' },
 ];
 
 const navbarItems = [
@@ -104,7 +104,7 @@ function WorkDropdownPortal({
         {projects.map((project) => (
           <Link
             key={project.id}
-            href={`/${locale}/${project.url}`}
+            href={`${project.url}`}
             className={cn(
               'block px-4 py-3 text-sm font-medium',
               'text-neutral-800 dark:text-neutral-100',
