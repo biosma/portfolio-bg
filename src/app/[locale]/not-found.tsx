@@ -1,5 +1,6 @@
 import FuzzyText from '@/components/fuzzy-text';
-import Link from 'next/link';
+import { Link } from '@/i18n/navigation';
+
 
 // app/not-found.tsx
 export default function NotFound() {

@@ -2,8 +2,8 @@
 
 import { cn } from '@/lib/utils';
 import { useLocale } from 'next-intl';
-import Link from 'next/link';
-import { usePathname } from 'next/navigation';
+import { Link } from '@/i18n/navigation';
+import { usePathname } from '@/i18n/navigation';
 import * as React from 'react';
 
 export function LocaleToggle() {

@@ -1,7 +1,8 @@
 'use client';
 
+import { usePathname, useRouter } from '@/i18n/navigation';
 import { AnimatePresence, motion } from 'framer-motion';
-import { usePathname, useRouter } from 'next/navigation';
+
 import React, {
   MouseEvent,
   PropsWithChildren,

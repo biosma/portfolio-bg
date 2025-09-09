@@ -7,7 +7,7 @@ import { RecoveryDeliveredSection } from '@/components/sections/RecoveryDelivere
 import { TradenethubSection } from '@/components/sections/TradenethubSection';
 import gsap from 'gsap';
 import { useTranslations } from 'next-intl';
-import { useRouter } from 'next/navigation';
+import { useRouter } from '@/i18n/navigation';
 import React, { ReactNode, RefObject, useCallback, useEffect, useMemo, useRef } from 'react';
 
 type CardSwapProps = {
