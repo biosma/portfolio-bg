@@ -42,7 +42,7 @@ export default async function LocaleLayout({
             <GlobalScrambleEffect />
 
             <SidebarProvider>
-              <div className="flex min-h-screen w-full flex-col overflow-hidden px-4 py-4 md:overflow-visible md:px-[60px] md:py-10">
+              <div className="flex min-h-screen w-full flex-col overflow-hidden px-4 py-4 md:px-[60px] md:py-10">
                 <div className="flex flex-1 flex-col text-[rgba(40,40,40,1)] dark:text-white">
                   <SidebarTrigger className="md:hidden" />
                   <Navbar />
