@@ -1,8 +1,5 @@
 'use client';
 
-import { usePathname, useRouter } from '@/i18n/navigation';
-import { AnimatePresence, motion } from 'framer-motion';
-
 import React, {
   MouseEvent,
   PropsWithChildren,
@@ -12,6 +9,8 @@ import React, {
   useState,
 } from 'react';
 import { createPortal } from 'react-dom';
+import { AnimatePresence, motion } from 'framer-motion';
+import { usePathname, useRouter } from '@/i18n/navigation';
 
 interface FullscreenOverlayProps {
   rect: DOMRect;
@@ -184,7 +183,7 @@ export function AnimatedCard({
     <>
       <div
         ref={cardRef}
-        className={`cursor-pointer w-full h-full transition-opacity duration-300 ${className} ${
+        className={`h-full w-full cursor-pointer transition-opacity duration-300 ${className} ${
           expanding || isNavigating ? 'opacity-0' : 'opacity-100'
         }`}
         onClick={handleClick}

@@ -124,3 +124,17 @@
 .embla { position: relative; }
 .embla__container { height: 100%; }
 .embla__slide { position: absolute; inset: 0; }
+
+/* * {
+  border: 1px solid transparent;
+}
+
+*:nth-child(3n) {
+  border-color: red;
+}
+*:nth-child(3n+1) {
+  border-color: blue;
+}
+*:nth-child(3n+2) {
+  border-color: green;
+} */
