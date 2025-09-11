@@ -20,7 +20,8 @@ export default function Page() {
         <h2 className="text-5xl font-bold w-full">{t('title')}</h2>
         <div className="w-full flex gap-8 justify-start mt-16">
           <InteractiveKeypad />
-<LightSwitchToggle onChange={setTheme} theme={toLightOrDark(theme)} />        </div>
+          <LightSwitchToggle onChange={setTheme} theme={toLightOrDark(theme)} />        
+      </div>
       </div>
     </div>
   );

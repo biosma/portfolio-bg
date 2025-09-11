@@ -1,17 +1,15 @@
 'use client';
 
+import { useEffect, useRef, useState } from 'react';
+import { createPortal } from 'react-dom';
+import { ChevronDownIcon } from 'lucide-react';
+import { useLocale, useTranslations } from 'next-intl';
 import { LocaleToggle } from '@/components/toggle-locale';
 import { ModeToggle } from '@/components/toggle-theme';
 import { Button } from '@/components/ui/button';
+import { Link, usePathname } from '@/i18n/navigation';
 import { cn } from '@/lib/utils';
-import { ChevronDownIcon, MenuIcon } from 'lucide-react';
-import { useLocale, useTranslations } from 'next-intl';
-import { Link } from '@/i18n/navigation';
-import { usePathname } from '@/i18n/navigation';
-import { useEffect, useRef, useState } from 'react';
-import { createPortal } from 'react-dom';
-
-import { NavbarSidebar } from './navbar-sidebar';
+import { navbarItems, projects } from '../../constants';
 
 interface NavbarItemProps {
   href: string;
@@ -34,43 +32,33 @@ const NavbarItem = ({
     <Button
       asChild
       variant="outline"
-      className={cn('bg-transparent border-none px-3.5 text-xl shadow-none dark:bg-transparent')}
+      className={cn(
+        'border-none bg-transparent px-3.5 text-xl shadow-none dark:bg-transparent',
+      )}
       onMouseEnter={onMouseEnter}
       onMouseLeave={onMouseLeave}
     >
       <Link
         href={href}
         className={cn(
-          'relative transition-colors flex items-center gap-1',
+          'relative flex items-center gap-1 transition-colors',
           isActive &&
-            'after:content-[""] after:absolute after:-bottom-1 after:left-1/3 after:w-1/3 after:h-[2px] after:rounded-full after:bg-black dark:after:bg-white after:transition-all after:duration-300',
+            'after:absolute after:-bottom-1 after:left-1/3 after:h-[2px] after:w-1/3 after:rounded-full after:bg-black after:transition-all after:duration-300 after:content-[""] dark:after:bg-white',
         )}
       >
         {children}
         {hasDropdown && (
           <ChevronDownIcon
-            className={cn('w-4 h-4 transition-transform duration-200', isActive && 'rotate-180')}
+            className={cn(
+              'h-4 w-4 transition-transform duration-200',
+              isActive && 'rotate-180',
+            )}
           />
         )}
       </Link>
     </Button>
   );
 };
-
-const projects = [
-  { id: 1, title: 'TradeNetHub', url: '/work/tradenethub' },
-  { id: 2, title: 'Mena Homes', url: '/work/mena-homes' },
-  { id: 3, title: 'Mentis', url: '/work/mentis' },
-  { id: 4, title: 'Recovery Delivered', url: '/work/recovery-delivered' },
-];
-
-const navbarItems = [
-  { href: '/', children: 'HOME' },
-  { href: '/about', children: 'ABOUT' },
-  { href: '/work', children: 'WORK', hasDropdown: true },
-  { href: '/contact', children: 'CONTACT' },
-  { href: '/sandbox', children: 'SANDBOX' },
-];
 
 interface DropdownMenuProps {
   isVisible: boolean;
@@ -84,7 +72,6 @@ function WorkDropdownPortal({
   isVisible,
   onMouseEnter,
   onMouseLeave,
-  locale,
   pos,
 }: DropdownMenuProps) {
   if (typeof document === 'undefined' || !pos) return null;
@@ -92,9 +79,11 @@ function WorkDropdownPortal({
   return createPortal(
     <div
       className={cn(
-        'fixed w-64 rounded-xl transition-all duration-200 z-[1100]',
-        isVisible ? 'opacity-100 visible translate-y-0' : 'opacity-0 invisible -translate-y-2',
-        'bg-white/30 dark:bg-accent/30 backdrop-blur-lg ring-1 ring-black/10 dark:ring-white/10',
+        'fixed z-[1100] w-64 rounded-xl transition-all duration-200',
+        isVisible
+          ? 'visible translate-y-0 opacity-100'
+          : 'invisible -translate-y-2 opacity-0',
+        'dark:bg-accent/30 bg-white/30 ring-1 ring-black/10 backdrop-blur-lg dark:ring-white/10',
       )}
       style={{ left: pos.left, top: pos.top }}
       onMouseEnter={onMouseEnter}
@@ -108,8 +97,8 @@ function WorkDropdownPortal({
             className={cn(
               'block px-4 py-3 text-sm font-medium',
               'text-neutral-800 dark:text-neutral-100',
-              'hover:bg-black/5 dark:hover:bg-white/5 hover:backdrop-brightness-110 dark:hover:backdrop-brightness-125',
-              'transition-[background,filter] rounded-lg mx-2',
+              'hover:bg-black/5 hover:backdrop-brightness-110 dark:hover:bg-white/5 dark:hover:backdrop-brightness-125',
+              'mx-2 rounded-lg transition-[background,filter]',
             )}
           >
             {project.title}
@@ -123,7 +112,6 @@ function WorkDropdownPortal({
 
 export const Navbar = () => {
   const pathname = usePathname();
-  const [isOpen, setIsOpen] = useState(false);
   const [showWorkDropdown, setShowWorkDropdown] = useState(false);
   const dropdownTimeoutRef = useRef<NodeJS.Timeout | null>(null);
   const t = useTranslations('NavBar');
@@ -131,7 +119,10 @@ export const Navbar = () => {
 
   // ref del trigger (wrapper del item WORK)
   const workTriggerRef = useRef<HTMLDivElement | null>(null);
-  const [dropdownPos, setDropdownPos] = useState<{ left: number; top: number } | null>(null);
+  const [dropdownPos, setDropdownPos] = useState<{
+    left: number;
+    top: number;
+  } | null>(null);
 
   const computeDropdownPos = () => {
     const el = workTriggerRef.current;
@@ -175,20 +166,20 @@ export const Navbar = () => {
   }, [showWorkDropdown]);
 
   return (
-    <nav className="h-20 flex justify-center items-center font-medium relative z-[1000]">
-      <NavbarSidebar open={isOpen} onOpenChange={setIsOpen} items={navbarItems} />
-
+    <nav className="relative z-[1000] hidden h-20 w-full items-start justify-start font-medium md:flex md:items-center md:justify-center">
       <div
         className={cn(
-          'hidden lg:flex flex-1 justify-center gap-6',
+          'hidden flex-1 justify-center gap-6 md:flex',
           !pathname.includes('/sandbox') && 'ps-[12.5%]',
         )}
       >
-        <div className="hidden lg:flex justify-center gap-6 px-6 py-2 bg-white/30 dark:bg-accent/30 backdrop-blur-lg w-fit rounded-lg">
+        <div className="dark:bg-accent/30 hidden w-fit justify-center gap-6 rounded-lg bg-white/30 px-6 py-2 backdrop-blur-lg lg:flex">
           {navbarItems.map((item) => {
             const isWorkItem = item.href === '/work';
             const isActive =
-              item.href === `/` ? pathname === `/${locale}` : pathname.includes(item.href);
+              item.href === `/`
+                ? pathname === `/${locale}`
+                : pathname.includes(item.href);
 
             return (
               <div
@@ -200,8 +191,12 @@ export const Navbar = () => {
                   href={item.href}
                   isActive={isActive}
                   hasDropdown={item.hasDropdown}
-                  onMouseEnter={isWorkItem && isActive ? handleMouseEnterWork : undefined}
-                  onMouseLeave={isWorkItem && isActive ? handleMouseLeaveWork : undefined}
+                  onMouseEnter={
+                    isWorkItem && isActive ? handleMouseEnterWork : undefined
+                  }
+                  onMouseLeave={
+                    isWorkItem && isActive ? handleMouseLeaveWork : undefined
+                  }
                 >
                   {t(item.children)}
                 </NavbarItem>
@@ -223,21 +218,11 @@ export const Navbar = () => {
       </div>
 
       {!pathname.includes('/sandbox') && (
-        <div className="flex items-center gap-2 pe-6">
+        <div className="hidden items-center gap-2 pe-6 md:flex">
           <LocaleToggle />
           <ModeToggle />
         </div>
       )}
-
-      <div className="items-center justify-center gap-4 flex lg:hidden">
-        <Button
-          variant="ghost"
-          className="size-12 border-transparent bg-white "
-          onClick={() => setIsOpen(true)}
-        >
-          <MenuIcon />
-        </Button>
-      </div>
     </nav>
   );
 };

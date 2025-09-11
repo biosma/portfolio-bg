@@ -204,7 +204,6 @@ const TextPressure: React.FC<TextPressureProps> = ({
         userSelect: 'none',
         whiteSpace: 'nowrap',
         fontWeight: 100,
-        width: '100%',
       }}
     >
       {chars.map((char, i) =>

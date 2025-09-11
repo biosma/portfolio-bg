@@ -1,14 +1,15 @@
 'use client';
 
+import React, { ReactNode, RefObject, useEffect, useMemo, useRef } from 'react';
+import gsap from 'gsap';
+import { useTranslations } from 'next-intl';
 import { AnimatedCard } from '@/components/animated-card';
 import { MenaHomesSection } from '@/components/sections/MenaHomesSection';
 import { MentisSection } from '@/components/sections/MentisSection';
 import { RecoveryDeliveredSection } from '@/components/sections/RecoveryDeliveredSection';
 import { TradenethubSection } from '@/components/sections/TradenethubSection';
-import gsap from 'gsap';
-import { useTranslations } from 'next-intl';
+import { useIsMobile } from '@/hooks/use-mobile';
 import { useRouter } from '@/i18n/navigation';
-import React, { ReactNode, RefObject, useCallback, useEffect, useMemo, useRef } from 'react';
 
 type CardSwapProps = {
   children: ReactNode;
@@ -65,29 +66,31 @@ function CardSwap({
   }
 
   // Función mejorada para marcar elementos con mejor control
-  const markElementsForScramble = useCallback((safe: boolean) => {
-    if (!containerRef.current) return;
+  // const markElementsForScramble = useCallback((safe: boolean) => {
+  //   if (!containerRef.current) return;
 
-    const elements = containerRef.current.querySelectorAll('[data-scramble-target]');
-    elements.forEach((el) => {
-      if (safe) {
-        el.removeAttribute('data-no-scramble');
-      } else {
-        el.setAttribute('data-no-scramble', 'true');
-      }
-    });
-  }, []);
+  //   const elements = containerRef.current.querySelectorAll(
+  //     '[data-scramble-target]',
+  //   );
+  //   elements.forEach((el) => {
+  //     if (safe) {
+  //       el.removeAttribute('data-no-scramble');
+  //     } else {
+  //       el.setAttribute('data-no-scramble', 'true');
+  //     }
+  //   });
+  // }, []);
 
-  // Función para disparar evento personalizado cuando sea seguro hacer scramble
-  const notifyScrambleReady = useCallback(() => {
-    const event = new CustomEvent('cardswap-ready', {
-      detail: { containerId: 'card-swap-container' },
-    });
-    window.dispatchEvent(event);
-  }, []);
+  // // Función para disparar evento personalizado cuando sea seguro hacer scramble
+  // const notifyScrambleReady = useCallback(() => {
+  //   const event = new CustomEvent('cardswap-ready', {
+  //     detail: { containerId: 'card-swap-container' },
+  //   });
+  //   window.dispatchEvent(event);
+  // }, []);
 
   function placeNow() {
-    markElementsForScramble(false);
+    // markElementsForScramble(false);
 
     let completedPlacements = 0;
     const totalPlacements = order.current.length;
@@ -109,8 +112,8 @@ function CardSwap({
             if (completedPlacements === totalPlacements) {
               // Usar requestAnimationFrame para asegurar que el DOM esté actualizado
               requestAnimationFrame(() => {
-                markElementsForScramble(true);
-                notifyScrambleReady();
+                // markElementsForScramble(true);
+                // notifyScrambleReady();
               });
             }
           },
@@ -128,7 +131,7 @@ function CardSwap({
     if (order.current.length < 2 || isAnimating.current) return;
 
     isAnimating.current = true;
-    markElementsForScramble(false);
+    // markElementsForScramble(false);
 
     const [front, ...rest] = order.current;
     const elFront = refs[front].current;
@@ -153,7 +156,9 @@ function CardSwap({
         });
 
         let completed = 0;
-        const totalAnimations = order.current.filter((_, i) => i < visibleCards).length;
+        const totalAnimations = order.current.filter(
+          (_, i) => i < visibleCards,
+        ).length;
 
         order.current.forEach((idx, i) => {
           if (i < visibleCards) {
@@ -176,8 +181,8 @@ function CardSwap({
                     isAnimating.current = false;
                     // Usar requestAnimationFrame para sincronización
                     requestAnimationFrame(() => {
-                      markElementsForScramble(true);
-                      notifyScrambleReady();
+                      // markElementsForScramble(true);
+                      // notifyScrambleReady();
                     });
                   }
                 },
@@ -234,7 +239,7 @@ function CardSwap({
     <div
       id="card-swap-container"
       ref={containerRef}
-      className="relative w-full max-w-4xl mx-auto h-[500px]"
+      className="relative mx-auto h-[500px] w-full max-w-4xl"
       style={{ perspective: '1000px' }}
     >
       {cards.map((card, idx) => (
@@ -266,7 +271,7 @@ function MiniatureLayout({
 }: MiniatureLayoutProps) {
   return (
     <div
-      className="w-full h-full origin-top-left overflow-hidden"
+      className="h-full w-full origin-top-left overflow-hidden"
       style={{
         transform: `scale(${scale})`,
         width: `${100 / scale}%`, // Compensar el scale
@@ -274,14 +279,14 @@ function MiniatureLayout({
       }}
     >
       {/* Recrear el fondo exacto del layout */}
-      <div className="absolute inset-0 bg-[url('/background-light.png')] dark:bg-[url('/background-dark.png')] bg-cover bg-no-repeat opacity-100 dark:opacity-0" />
+      <div className="absolute inset-0 bg-[url('/background-light.png')] bg-cover bg-no-repeat opacity-100 dark:bg-[url('/background-dark.png')] dark:opacity-0" />
       <div className="absolute inset-0 bg-[url('/background-dark.png')] bg-cover bg-no-repeat opacity-0 dark:opacity-100" />
 
       {/* Container principal igual al layout */}
-      <div className="flex flex-col min-h-screen py-[72px] px-[60px] relative">
-        <div className="flex flex-col flex-1 text-[rgba(40,40,40,1)] dark:text-white">
+      <div className="relative flex min-h-screen flex-col px-[60px] py-[72px]">
+        <div className="flex flex-1 flex-col text-[rgba(40,40,40,1)] dark:text-white">
           {/* Contenido principal */}
-          <div className="flex flex-col flex-1 p-10">{children}</div>
+          <div className="flex flex-1 flex-col p-10">{children}</div>
         </div>
       </div>
     </div>
@@ -293,45 +298,54 @@ function BrowserWindow({
   children,
   url,
   maintainAspect = false,
+  isMobile,
 }: {
   children: React.ReactNode;
   url?: string;
   maintainAspect?: boolean;
+  isMobile?: boolean;
 }) {
   return (
-    <div className="relative w-full h-full">
+    <div className="relative h-full w-full">
       <div
-        className="rounded-xl shadow-2xl bg-white overflow-hidden border border-gray-200 h-full flex flex-col"
+        className="flex h-full flex-col overflow-hidden rounded-xl border border-gray-200 bg-white shadow-2xl"
         style={{
-          transform: maintainAspect ? 'perspective(1000px) rotateX(5deg) rotateY(-5deg)' : 'none',
-          boxShadow: '0 25px 50px -12px rgba(0, 0, 0, 0.4), 0 0 0 1px rgba(255, 255, 255, 0.1)',
+          transform: maintainAspect
+            ? 'perspective(1000px) rotateX(5deg) rotateY(-5deg)'
+            : 'none',
+          boxShadow:
+            '0 25px 50px -12px rgba(0, 0, 0, 0.4), 0 0 0 1px rgba(255, 255, 255, 0.1)',
         }}
       >
         {/* Header del browser */}
-        <div className="flex items-center h-12 px-4 bg-gray-100 border-b border-gray-200 flex-shrink-0">
-          <div className="flex gap-2 items-center mr-4">
-            <div className="w-3 h-3 bg-red-500 rounded-full" />
-            <div className="w-3 h-3 bg-yellow-400 rounded-full" />
-            <div className="w-3 h-3 bg-green-500 rounded-full" />
+        <div className="flex h-12 flex-shrink-0 items-center border-b border-gray-200 bg-gray-100 px-4">
+          <div className="mr-4 flex items-center gap-2">
+            <div className="h-3 w-3 rounded-full bg-red-500" />
+            <div className="h-3 w-3 rounded-full bg-yellow-400" />
+            <div className="h-3 w-3 rounded-full bg-green-500" />
           </div>
 
-          <div className="flex items-center flex-1 gap-3">
+          <div className="flex flex-1 items-center gap-3">
             <div className="flex gap-1 dark:text-black">
               <div className="p-1">←</div>
               <div className="p-1">→</div>
               <div className="p-1">↻</div>
             </div>
 
-            <div className="flex-1 flex items-center">
-              <div className="w-full max-w-md bg-white border border-gray-300 rounded-lg px-4 py-2 text-sm text-gray-700">
-                🔒 {url || 'gonzalo-bonelli.com'}
+            <div className="w-full max-w-[clamp(120px,100%,500px)] overflow-hidden rounded-lg border border-gray-300 bg-white px-2 py-2 text-gray-700 sm:px-4">
+              <div className="truncate text-xs sm:text-sm">
+                {isMobile ? (
+                  <span>{url || 'gonzalo-bonelli.com'}</span>
+                ) : (
+                  <span>🔒 {url || 'gonzalo-bonelli.com'}</span>
+                )}
               </div>
             </div>
           </div>
         </div>
 
         {/* Contenido con fondo exacto del layout */}
-        <div className="flex-1 relative overflow-hidden">{children}</div>
+        <div className="relative flex-1 overflow-hidden">{children}</div>
       </div>
     </div>
   );
@@ -396,21 +410,24 @@ export default function ProjectsShowcase() {
     });
     // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [router]);
+  const isMobile = useIsMobile();
 
   return (
-    <div className="grid grid-cols-12 flex-1 place-content-center gap-6">
-      <div className="col-span-6 flex flex-col flex-wrap gap-9">
-        <h2 className="text-3xl font-bold">{t('title')}</h2>
-        <p className="text-lg font-normal">{t('description_1')}</p>
-        <p className="text-lg font-normal">{t('description_2')}</p>
+    <div className="grid flex-1 grid-cols-12 place-content-center gap-6">
+      <div className="col-span-12 flex flex-col flex-wrap gap-9 lg:col-span-6">
+        <h2 className="text-xl font-bold lg:text-3xl">{t('title')}</h2>
+        <p className="text-md font-normal lg:text-lg">{t('description_1')}</p>
+        <p className="text-md hidden font-normal lg:block lg:text-lg">
+          {t('description_2')}
+        </p>
       </div>
 
-      <div className="col-span-6 flex-1">
+      <div className="col-span-12 flex-1 lg:col-span-6">
         <CardSwap
           cardDistance={70}
           verticalDistance={20}
-          delay={3000}
-          pauseOnHover={true}
+          delay={isMobile ? 2000 : 3000}
+          pauseOnHover={isMobile ? false : true}
           skewAmount={1}
           easing={'linear'}
         >
@@ -419,14 +436,22 @@ export default function ProjectsShowcase() {
               key={project.id}
               href={project.url}
               fullscreenContent={
-                <BrowserWindow url={project.projectUrl} maintainAspect={false}>
+                <BrowserWindow
+                  isMobile={isMobile}
+                  url={project.projectUrl}
+                  maintainAspect={false}
+                >
                   <MiniatureLayout scale={1} showNavbar={true}>
                     {project.rightBody}
                   </MiniatureLayout>
                 </BrowserWindow>
               }
             >
-              <BrowserWindow url={project.projectUrl} maintainAspect={true}>
+              <BrowserWindow
+                isMobile={isMobile}
+                url={project.projectUrl}
+                maintainAspect={true}
+              >
                 <MiniatureLayout scale={0.8} showNavbar={true}>
                   {project.rightBody}
                 </MiniatureLayout>
