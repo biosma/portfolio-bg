@@ -240,6 +240,7 @@
     "email": "gonzalourielbonelli@gmail.com"
   },
   "SandboxPage": {
-    "title": "Here you will find random components"
+    "title": "Here you will find random components",
+"first_component": "Inspired by <link>this experiment by Jhey</link> and reimagined in React."
   }
 }

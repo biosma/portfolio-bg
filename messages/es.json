@@ -241,6 +241,7 @@
     "email": "gonzalourielbonelli@gmail.com"
   },
   "SandboxPage": {
-    "title": "Aquí encontrarás componentes aleatorios"
+    "title": "Aquí encontrarás componentes aleatorios",
+        "first_component": "Inspirado en <link>este experimento de Jhey</link> y reimaginado en React."
   }
 }

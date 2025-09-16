@@ -239,7 +239,7 @@ function CardSwap({
     <div
       id="card-swap-container"
       ref={containerRef}
-      className="relative mx-auto h-[500px] w-full max-w-4xl"
+      className="relative mx-auto h-[500px] 2xl:h-[750px] w-full max-w-4xl"
       style={{ perspective: '1000px' }}
     >
       {cards.map((card, idx) => (
